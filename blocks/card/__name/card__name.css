@@ -1,7 +1,7 @@
-.element__name {
+.card__name {
   display: flex;
   justify-content: space-between;
 
-  width: 237px;
+  width: 241px;
   margin: 24px auto 0;
 }

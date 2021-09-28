@@ -1,4 +1,4 @@
-.element__card-title {
+.card__title {
   margin: 0;
   padding: 0;
   width: 200px;
@@ -16,7 +16,7 @@
 }
 
 @media (max-width: 680px) {
-  .element__card-title {
+  .card__title {
     width: 180px;
   }
 }

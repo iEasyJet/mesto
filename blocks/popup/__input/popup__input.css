@@ -1,12 +1,12 @@
-.popup__input-job {
+.popup__input {
   display: block;
   width: 100%;
-  margin: 0 auto 46px;
-  padding: 10px 10px 10px;
+  margin: 0 auto 20px;
+  padding: 10px 0 10px;
   box-sizing: border-box;
   border: 0;
 
-  border-bottom: 1px solid rgba(0, 0, 0, 02);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
   font-family: Inter, Arial, Helvetica, sans-serif;
   font-style: normal;
@@ -15,11 +15,4 @@
   line-height: 17px;
 
   color: #000000;
-}
-
-
-@media (max-width: 550px) {
-  .popup__input-job {
-    margin-bottom: 42px;
-  }
 }
