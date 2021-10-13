@@ -1,3 +1,6 @@
+// Самый первый комментарий из прошлого ревью(Ревью 2, строка 116) я не понял.
+// Я удалил лишний модификатор для просмотра картинки, и открываю его одним единым сейчас popup_opened
+// Надеюсь про это и шел разговор \(*_*)/
 const initialCards = [
   {
     name: 'Архыз',
@@ -89,90 +92,73 @@ const popupPicExpand = popupPic.querySelector('.popup-pic__expand');
 
 
 
-// Функция создания содержимого карточки
-function createCard(selector, name, link, name) {
-  selector.querySelector('.card__title').textContent = name;
-  selector.querySelector('.card__img').src = link;
-  selector.querySelector('.card__img').alt = name;
+// Добавляем новый класс для отображения/закрытия popup
+function openPopup(popup) {
+  popup.classList.add('popup_opened');
 };
 
 
 
+// Удаляем новый класс  для скрытия popup
+function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+};
 
-// Добавляем массив карточек на страницу
-initialCards.forEach(function(item) {
-  // Клонируем заготовку карточки
+
+
+// Функция создания содержимого карточки
+function createCard(name, link, name) {
+
+  // Копируем содержимое заготовки
   const cardItem = template.querySelector('.card__item').cloneNode(true);
-  //selector.querySelector('.card__title').textContent = item.name;
-  //selector.querySelector('.card__img').src = item.link;
-  //selector.querySelector('.card__img').alt = item.name;
 
-  // Создание содержимого карточки
-  createCard(cardItem, item.name, item.link, item.name);
-
+  // Простовялем соответсвующие название, картинку и alt
+  cardItem.querySelector('.card__title').textContent = name;
+  cardItem.querySelector('.card__img').src = link;
+  cardItem.querySelector('.card__img').alt = name;
 
   // Функция развертывания картинки popup-pic
   function openPopupPic() {
-    popupPic.classList.add('popup-pic_opened');
+    popupPic.classList.add('popup_opened');
     popupPicTitle.textContent = cardItem.querySelector('.card__title').textContent;
     popupPicExpand.src = cardItem.querySelector('.card__img').src;
   };
-  // Функция закрытия popup-pic
-  function closePopupPic() {
-    popupPic.classList.remove('popup-pic_opened');
-  };
+
   // Открытие картинки
-  cardItem.querySelector('.card__img').addEventListener('click', openPopupPic)
-  // Закрытие картинки
-  popupPicClose.addEventListener('click', closePopupPic);
+  cardItem.querySelector('.card__img').addEventListener('click', openPopupPic);
 
-
-
-  // Находим лайк на карточке
-  const cardLike = cardItem.querySelector('.card__like');
-  // Добавление/удаление модификатора лайка
-  function addLike() {
-    cardLike.classList.toggle('card__like_active');
-  };
-
+  // Функция удаления карточки
   function deleteCard() {
     cardItem.remove();
   };
 
   // Удаление карточки
   cardItem.querySelector('.card__delete').addEventListener('click', deleteCard);
+
+  // Находим лайк на карточке
+  const cardLike = cardItem.querySelector('.card__like');
+
+  // Функция проставления/удаления лайка
+  function addLike() {
+    cardLike.classList.toggle('card__like_active');
+  };
+
   // Проставление/удаление лайка
   cardLike.addEventListener('click', addLike);
 
   // Добавление карточки в начало списка
   card.prepend(cardItem);
+};
+
+
+
+// Добавляем массив карточек на страницу
+initialCards.forEach(function(item) {
+
+  // Создание содержимого карточки
+  createCard(item.name, item.link, item.name);
+
 });
-
-
-
-
-// Добавляем новый класс с display block для отображения popup-img
-/* function openPopupImg() {
-  popupImg.classList.add('popup_opened');
-
-  //nameImgInput.value = '';
-  //linkImgInput.value = '';
-};
-// Удаляем новый класс с display block для скрытия popup-img
-function closePopupImg() {
-  popupImg.classList.remove('popup_opened');
-};
- */
-
-
-// Добавляем новый класс для отображения/закрытия popup
-function openPopup(popup, selector) {
-  popup.classList.add(selector);
-};
-// Удаляем новый класс  для скрытия popup
-function closePopup(popup, selector) {
-  popup.classList.remove(selector);
-};
 
 
 
@@ -182,88 +168,52 @@ function popupValue() {
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
 
-  //openPopup()
-  openPopup(popup, 'popup_opened');
-  };
+  openPopup(popup);
+};
 
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function createNewUserName (evt) {
-    evt.preventDefault();
+  evt.preventDefault();
 
-    // Вставьте новые значения в разметку
-    profileName.textContent = nameInput.value;
-    profileJob.textContent = jobInput.value;
-    closePopup(popup, 'popup_opened');
+  // Вставляем новые значения в разметку
+  profileName.textContent = nameInput.value;
+  profileJob.textContent = jobInput.value;
+  closePopup(popup);
 };
 
 
 // Функция клонирования значения формы popup-img с функцией удаления, просмотра фото и лайка
 function createNewCard (evt) {
+  // Не даем перезагружаться странице
   evt.preventDefault();
 
-    const cardItem = template.querySelector('.card__item').cloneNode(true);
+  // Создание содержимого карточки
+  createCard(nameImgInput.value, linkImgInput.value, nameImgInput.value);
 
-   // Создание содержимого карточки
-   createCard(cardItem, nameImgInput.value, linkImgInput.value, nameImgInput.value);
-
-    //cardItem.querySelector('.card__title').textContent = nameImgInput.value;
-    //cardItem.querySelector('.card__img').src = linkImgInput.value;
-    //cardItem.querySelector('.card__img').alt = nameImgInput.value;
-
-    const cardLike = cardItem.querySelector('.card__like');
-
-    // Функция развертывания картинки popup-pic
-    function openPopupPic() {
-      popupPic.classList.add('popup-pic_opened');
-      popupPicTitle.textContent = cardItem.querySelector('.card__title').textContent;
-      popupPicExpand.src = cardItem.querySelector('.card__img').src;
-    };
-    // Функция закрытия popup-pic
-    function closePopupPic() {
-      popupPic.classList.remove('popup-pic_opened');
-    };
-    // Открытие картинки
-    cardItem.querySelector('.card__img').addEventListener('click', openPopupPic)
-    // Закрытие картинки
-    popupPicClose.addEventListener('click', closePopupPic);
-
-
-    function addLike() {
-      cardLike.classList.toggle('card__like_active');
-    }
-
-    cardLike.addEventListener('click', addLike);
-
-    function deleteCard() {
-      cardItem.remove();
-    };
-
-    cardItem.querySelector('.card__delete').addEventListener('click', deleteCard);
-
-    card.prepend(cardItem);
-
-    //closePopupImg();
-    closePopup(popupImg, 'popup_opened');
+  // Закрываем форму после создания карточки
+  closePopup(popupImg);
 };
 
 
 
 // Открытие popup-img
-profileBtn.addEventListener('click', /*openPopupImg*/() => openPopup(popupImg, 'popup_opened'));
+profileBtn.addEventListener('click', () => openPopup(popupImg));
 
 // Закрытие popup-img
-popupSkipBtnImg.addEventListener('click', /* closePopupImg */() => closePopup(popupImg, 'popup_opened'));
+popupSkipBtnImg.addEventListener('click', () => closePopup(popupImg));
 
 // Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
 formElementPopup.addEventListener('submit', createNewUserName);
 
 // Открытие popup
 editBtn.addEventListener('click', popupValue);
 
 // Закрытие popup
-popupSkipBtn.addEventListener('click', /* closePopup */() => closePopup(popup, 'popup_opened'));
+popupSkipBtn.addEventListener('click', () => closePopup(popup));
 
 // Добавление новых карточек
 formElementImg.addEventListener('submit', createNewCard);
+
+// Закрытие большой картинки
+popupPicClose.addEventListener('click', () => closePopup(popupPic));
