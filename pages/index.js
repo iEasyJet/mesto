@@ -151,7 +151,6 @@ function createCard(titleCard, linkImg) {
   // Проставление/удаление лайка
   cardLike.addEventListener('click', addLike);
 
-  // Добавляем карточки
   addCard(card, cardItem);
 };
 
@@ -191,9 +190,6 @@ function createNewUserName (evt) {
 function createNewCard (evt) {
   // Не даем перезагружаться странице
   evt.preventDefault();
-
-  // Копируем содержимое заготовки
-  const cardItem = template.querySelector('.card__item').cloneNode(true);
 
   // Создание содержимого карточки
   createCard(nameImgInput.value, linkImgInput.value);
