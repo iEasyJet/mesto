@@ -1,6 +1,3 @@
-// Самый первый комментарий из прошлого ревью(Ревью 2, строка 116) я не понял.
-// Я удалил лишний модификатор для просмотра картинки, и открываю его одним единым сейчас popup_opened
-// Надеюсь про это и шел разговор \(*_*)/
 const initialCards = [
   {
     name: 'Архыз',
@@ -56,11 +53,11 @@ const profileJob = profile.querySelector('.profile__name-job');
 
 
 // Находим popup
-const popup = document.querySelector('.popup-user-profile');
+const popupEditProfile = document.querySelector('.popup-user-profile');
 // Находим кнопку закрытия popup
-const popupSkipBtn = popup.querySelector('.popup__close');
+const popupSkipBtn = popupEditProfile.querySelector('.popup__close');
 // Находим форму popup
-const formElementPopup = popup.querySelector('.popup__form');
+const formElementPopup = popupEditProfile.querySelector('.popup__form');
 // Находим поля формы в DOM
 const nameInput = formElementPopup.querySelector('.popup__input_type_name');
 const jobInput = formElementPopup.querySelector('.popup__input_type_job');
@@ -84,11 +81,11 @@ const linkImgInput = formElementImg.querySelector('.popup__input_type_link-img')
 // Находим popup-pic
 const popupPic = document.querySelector('.popup-pic');
 // Находим закрытие popup-pic
-const popupPicClose = popupPic.querySelector('.popup-pic__close');
+const popupPicClose = popupPic.querySelector('.popup__close');
 // Находим popup-pic__title
-const popupPicTitle = popupPic.querySelector('.popup-pic__title');
+const popupPicTitle = popupPic.querySelector('.popup__pic-title');
 // Находим popup-pic__expand
-const popupPicExpand = popupPic.querySelector('.popup-pic__expand');
+const popupPicExpand = popupPic.querySelector('.popup__pic-expand');
 
 
 
@@ -106,16 +103,24 @@ function closePopup(popup) {
 
 
 
+// Функция добавления готовой карточки на страницу
+// С параметрами: место добавления и заготовки карточки
+function addCard(placeOfAdd, template) {
+  placeOfAdd.prepend(template);
+};
+
+
+
 // Функция создания содержимого карточки
-function createCard(name, link, name) {
+function createCard(titleCard, linkImg) {
 
   // Копируем содержимое заготовки
   const cardItem = template.querySelector('.card__item').cloneNode(true);
 
   // Простовялем соответсвующие название, картинку и alt
-  cardItem.querySelector('.card__title').textContent = name;
-  cardItem.querySelector('.card__img').src = link;
-  cardItem.querySelector('.card__img').alt = name;
+  cardItem.querySelector('.card__title').textContent = titleCard;
+  cardItem.querySelector('.card__img').src = linkImg;
+  cardItem.querySelector('.card__img').alt = titleCard;
 
   // Функция развертывания картинки popup-pic
   function openPopupPic() {
@@ -146,8 +151,8 @@ function createCard(name, link, name) {
   // Проставление/удаление лайка
   cardLike.addEventListener('click', addLike);
 
-  // Добавление карточки в начало списка
-  card.prepend(cardItem);
+  // Добавляем карточки
+  addCard(card, cardItem);
 };
 
 
@@ -155,9 +160,8 @@ function createCard(name, link, name) {
 // Добавляем массив карточек на страницу
 initialCards.forEach(function(item) {
 
-  // Создание содержимого карточки
-  createCard(item.name, item.link, item.name);
-
+  // Создаем содержимое карточки
+  createCard(item.name, item.link);
 });
 
 
@@ -168,7 +172,7 @@ function popupValue() {
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
 
-  openPopup(popup);
+  openPopup(popupEditProfile);
 };
 
 // Обработчик «отправки» формы, хотя пока
@@ -179,7 +183,7 @@ function createNewUserName (evt) {
   // Вставляем новые значения в разметку
   profileName.textContent = nameInput.value;
   profileJob.textContent = jobInput.value;
-  closePopup(popup);
+  closePopup(popupEditProfile);
 };
 
 
@@ -188,8 +192,11 @@ function createNewCard (evt) {
   // Не даем перезагружаться странице
   evt.preventDefault();
 
+  // Копируем содержимое заготовки
+  const cardItem = template.querySelector('.card__item').cloneNode(true);
+
   // Создание содержимого карточки
-  createCard(nameImgInput.value, linkImgInput.value, nameImgInput.value);
+  createCard(nameImgInput.value, linkImgInput.value);
 
   // Закрываем форму после создания карточки
   closePopup(popupImg);
@@ -210,7 +217,7 @@ formElementPopup.addEventListener('submit', createNewUserName);
 editBtn.addEventListener('click', popupValue);
 
 // Закрытие popup
-popupSkipBtn.addEventListener('click', () => closePopup(popup));
+popupSkipBtn.addEventListener('click', () => closePopup(popupEditProfile));
 
 // Добавление новых карточек
 formElementImg.addEventListener('submit', createNewCard);
