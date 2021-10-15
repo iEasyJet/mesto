@@ -114,7 +114,7 @@ function addCard(placeOfAdd, template) {
 // Функция создания содержимого карточки
 function createCard(titleCard, linkImg, template) {
 
-  // Простовялем соответсвующие название, картинку и alt
+  // Проставялем соответсвующее название, картинку и alt
   template.querySelector('.card__title').textContent = titleCard;
   template.querySelector('.card__img').src = linkImg;
   template.querySelector('.card__img').alt = titleCard;
