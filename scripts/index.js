@@ -1,3 +1,6 @@
+import { Card } from './Card.js';
+import { FormValidator } from './FormValidator.js';
+
 // Находим template
 const template = document.querySelector('#card').content;
 // Находим название карточки
@@ -59,6 +62,8 @@ const popupPicClose = popupPic.querySelector('.popup__close');
 const popupPicTitle = popupPic.querySelector('.popup__pic-title');
 // Находим popup-pic__expand
 const popupPicExpand = popupPic.querySelector('.popup__pic-expand');
+// Находим лайк на карточке
+const cardLike = template.querySelector('.card__like');
 
 // Функция закрытия попапов по клавише ESC
 function handleESC(evt) {
@@ -79,62 +84,6 @@ function closePopup(popup) {
   document.removeEventListener('keydown', handleESC);
 }
 
-// Функция добавления готовой карточки на страницу
-// С параметрами: место добавления и заготовки карточки
-function addCard(placeOfAdd, template) {
-  placeOfAdd.prepend(template);
-}
-
-// Функция создания содержимого карточки
-function createCard(titleCard, linkImg, template) {
-  // Проставялем соответсвующее название, картинку и alt
-  template.querySelector('.card__title').textContent = titleCard;
-  template.querySelector('.card__img').src = linkImg;
-  template.querySelector('.card__img').alt = titleCard;
-
-  // Функция развертывания картинки popup-pic
-  function openPopupPic() {
-    openPopup(popupPic);
-    popupPicTitle.textContent =
-      template.querySelector('.card__title').textContent;
-    popupPicExpand.src = template.querySelector('.card__img').src;
-  }
-
-  // Открытие картинки
-  template.querySelector('.card__img').addEventListener('click', openPopupPic);
-
-  // Функция удаления карточки
-  function deleteCard() {
-    template.remove();
-  }
-
-  // Удаление карточки
-  template.querySelector('.card__delete').addEventListener('click', deleteCard);
-
-  // Находим лайк на карточке
-  const cardLike = template.querySelector('.card__like');
-
-  // Функция проставления/удаления лайка
-  function addLike() {
-    cardLike.classList.toggle('card__like_active');
-  }
-
-  // Проставление/удаление лайка
-  cardLike.addEventListener('click', addLike);
-}
-
-// Добавляем массив карточек на страницу
-initialCards.forEach(function (item) {
-  // Копируем содержимое заготовки
-  const cardItem = template.querySelector('.card__item').cloneNode(true);
-
-  // Создаем содержимое карточки
-  createCard(item.name, item.link, cardItem);
-
-  // Добавляем карточки на страницу
-  addCard(cardsContainer, cardItem);
-});
-
 // Функция для копирования значения в value popup
 function openPopupEditProfile() {
   // Прописываем значения в value input
@@ -142,10 +91,8 @@ function openPopupEditProfile() {
   jobInput.value = profileJob.textContent;
 
   openPopup(popupEditProfile);
-  // Пришлось добавить данную функцию то же и для формы профиля
-  // Тк изначально, если ее нет, то кнопка заблокирована
-  // Хотя поля 'имя' и 'место работы' заполнены
-  toggleButtonState(popupProfileInputs, popupProfileSubmit);
+  const editProfile = new FormValidator(validationConfig);
+  editProfile._toggleButtonState(popupProfileInputs, popupProfileSubmit);
 }
 
 // Обработчик «отправки» формы, хотя пока
@@ -159,28 +106,6 @@ function handleNewUserName(evt) {
   closePopup(popupEditProfile);
 }
 
-// Функция клонирования значения формы popup-img с функцией удаления, просмотра фото и лайка
-function handleNewCard(evt) {
-  // Не даем перезагружаться странице
-  evt.preventDefault();
-
-  // Копируем содержимое заготовки
-  const cardItem = template.querySelector('.card__item').cloneNode(true);
-
-  // Создание содержимого карточки
-  createCard(nameImgInput.value, linkImgInput.value, cardItem);
-
-  // Добавляем карточки на страницу
-  addCard(cardsContainer, cardItem);
-
-  // Закрываем форму после создания карточки
-  closePopup(popupImg);
-
-  // Очищаем поля формы
-  nameImgInput.value = '';
-  linkImgInput.value = '';
-}
-
 // Функция закрытия попапа по оверлею
 function closeOnOverlay(e) {
   if (e.target === e.currentTarget) {
@@ -189,9 +114,10 @@ function closeOnOverlay(e) {
 }
 
 // Открытие popup-img
-newCardBtn.addEventListener('click', function () {
+newCardBtn.addEventListener('click', () => {
   openPopup(popupImg);
-  toggleButtonState(imgInputs, popupImgSubmit);
+  const formImg = new FormValidator(validationConfig);
+  formImg._toggleButtonState(imgInputs, popupImgSubmit);
 });
 
 // Закрытие popup-img
@@ -206,13 +132,37 @@ editBtn.addEventListener('click', openPopupEditProfile);
 // Закрытие popup
 popupSkipBtn.addEventListener('click', () => closePopup(popupEditProfile));
 
-// Добавление новых карточек
-formElementImg.addEventListener('submit', handleNewCard);
-
-// Закрытие большой картинки
-popupPicClose.addEventListener('click', () => closePopup(popupPic));
-
 // Закрытие попапов по оверлею
 popupEditProfile.addEventListener('click', closeOnOverlay);
 popupImg.addEventListener('click', closeOnOverlay);
 popupPic.addEventListener('click', closeOnOverlay);
+
+// Добавляем массив карточек
+initialCards.forEach(function (item) {
+  const card = new Card(item.name, item.link, '#card');
+  const cardElement = card.generateCard();
+
+  document.querySelector('.card').prepend(cardElement);
+});
+
+// Добавление новых карточек
+formElementImg.addEventListener('submit', () => {
+  const card = new Card(nameImgInput.value, linkImgInput.value, '#card');
+  const cardElement = card.generateCard();
+
+  document.querySelector('.card').prepend(cardElement);
+
+  // Закрываем форму после создания карточки
+  closePopup(popupImg);
+
+  // Очищаем поля формы
+  nameImgInput.value = '';
+  linkImgInput.value = '';
+});
+
+// Вызовем функцию валидации
+forms.forEach((item) => {
+  const form = new FormValidator(validationConfig);
+  const formElement = form.enableValidation(item);
+  return formElement;
+});
