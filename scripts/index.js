@@ -1,15 +1,6 @@
 import { Card } from './Card.js';
-import { FormValidator } from './FormValidator.js';
-
-// Находим template
-const template = document.querySelector('#card').content;
-// Находим название карточки
-const nameCard = template.querySelector('.card__title');
-// Находим картинку карточки
-const imgCard = template.querySelector('.card__img');
-
-// Находим место добавления карточек в HTML
-const cardsContainer = document.querySelector('.card');
+import { validationConfig, forms, FormValidator } from './FormValidator.js';
+import { initialCards } from './initial-сards.js';
 
 // Находим секцию profile
 const profile = document.querySelector('.profile');
@@ -34,8 +25,6 @@ const popupProfileInputs = [nameInput, jobInput];
 // Кнопка отправки формы
 const popupProfileSubmit = formElementPopup.querySelector('.popup__btn');
 
-// Находим кнопку добавления картинок для popup-img
-const newCardBtn = profile.querySelector('.profile__btn');
 // Находим popup-img
 const popupImg = document.querySelector('.popup_type_card');
 // Находим кнопку закрытия popup-img
@@ -62,8 +51,6 @@ const popupPicClose = popupPic.querySelector('.popup__close');
 const popupPicTitle = popupPic.querySelector('.popup__pic-title');
 // Находим popup-pic__expand
 const popupPicExpand = popupPic.querySelector('.popup__pic-expand');
-// Находим лайк на карточке
-const cardLike = template.querySelector('.card__like');
 
 // Функция закрытия попапов по клавише ESC
 function handleESC(evt) {
@@ -72,16 +59,26 @@ function handleESC(evt) {
   }
 }
 
+// Функция закрытия попапа по оверлею
+function closeOnOverlay(e) {
+  if (e.target === e.currentTarget) {
+    closePopup(e.target);
+  }
+}
+
 // Добавляем новый класс для отображения/закрытия popup
 function openPopup(popup) {
   popup.classList.add('popup_opened');
   document.addEventListener('keydown', handleESC);
+  popup.addEventListener('click', closeOnOverlay);
 }
 
 // Удаляем новый класс  для скрытия popup
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
   document.removeEventListener('keydown', handleESC);
+  popup.removeEventListener('click', closeOnOverlay);
+  formElementPopup.removeEventListener('submit', handleNewUserName);
 }
 
 // Функция для копирования значения в value popup
@@ -89,6 +86,8 @@ function openPopupEditProfile() {
   // Прописываем значения в value input
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
+
+  formElementPopup.addEventListener('submit', handleNewUserName);
 
   openPopup(popupEditProfile);
   const editProfile = new FormValidator(validationConfig);
@@ -105,37 +104,6 @@ function handleNewUserName(evt) {
   profileJob.textContent = jobInput.value;
   closePopup(popupEditProfile);
 }
-
-// Функция закрытия попапа по оверлею
-function closeOnOverlay(e) {
-  if (e.target === e.currentTarget) {
-    closePopup(e.target);
-  }
-}
-
-// Открытие popup-img
-newCardBtn.addEventListener('click', () => {
-  openPopup(popupImg);
-  const formImg = new FormValidator(validationConfig);
-  formImg._toggleButtonState(imgInputs, popupImgSubmit);
-});
-
-// Закрытие popup-img
-popupSkipBtnImg.addEventListener('click', () => closePopup(popupImg));
-
-// Прикрепляем обработчик к форме:
-formElementPopup.addEventListener('submit', handleNewUserName);
-
-// Открытие popup
-editBtn.addEventListener('click', openPopupEditProfile);
-
-// Закрытие popup
-popupSkipBtn.addEventListener('click', () => closePopup(popupEditProfile));
-
-// Закрытие попапов по оверлею
-popupEditProfile.addEventListener('click', closeOnOverlay);
-popupImg.addEventListener('click', closeOnOverlay);
-popupPic.addEventListener('click', closeOnOverlay);
 
 // Добавляем массив карточек
 initialCards.forEach(function (item) {
@@ -165,4 +133,52 @@ forms.forEach((item) => {
   const form = new FormValidator(validationConfig);
   const formElement = form.enableValidation(item);
   return formElement;
+});
+
+// Ставим слушатель на весь документ для отслеживания кликов
+// на открытие и закрытие всех типов попапов через event.target
+document.addEventListener('click', (e) => {
+
+  // Увеличение картинки карточки
+  if (e.target.className === 'card__img') {
+    openPopup(popupPic);
+
+    popupPicTitle.textContent =
+      e.target.parentElement.querySelector('.card__name').textContent;
+    popupPicExpand.src = e.target.parentElement.querySelector('.card__img').src;
+
+    popupPicClose.addEventListener('click', () => {
+      closePopup(popupPic);
+      popupPicClose.removeEventListener('click', () => {
+        closePopup(popupPic);
+      });
+    });
+  }
+
+  // Открытие формы профиля изменения имени и работы
+  if (e.target.className === 'profile__edit-btn') {
+    openPopupEditProfile();
+
+    popupSkipBtn.addEventListener('click', () => {
+      closePopup(popupEditProfile);
+      popupSkipBtn.removeEventListener('click', () =>
+        closePopup(popupEditProfile)
+      );
+    });
+  }
+
+  // Открытие формы создания новой карточки
+  if (e.target.className === 'profile__btn') {
+    openPopup(popupImg);
+    const formImg = new FormValidator(validationConfig);
+    formImg._toggleButtonState(imgInputs, popupImgSubmit);
+
+    // Закрытие popup-img
+    popupSkipBtnImg.addEventListener('click', () => {
+      closePopup(popupImg);
+      popupSkipBtnImg.removeEventListener('click', () => {
+        closePopup(popupImg);
+      });
+    });
+  }
 });

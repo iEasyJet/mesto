@@ -15,22 +15,6 @@ class Card {
     return cardElement;
   }
 
-  // Метод открытия попапа
-  _handleOpenPopup() {
-    popupPic.classList.add('popup_opened');
-
-    popupPicTitle.textContent = this._title;
-    popupPicExpand.src = this._linkImg;
-
-    document.addEventListener('keydown', handleESC);
-  }
-
-  // Метод закрытия попапа
-  _handleClosePopup() {
-    popupPic.classList.remove('popup_opened');
-    document.removeEventListener('keydown', handleESC);
-  }
-
   // Метод проставления/удаления лайка
   _addLike() {
     this._element
@@ -45,16 +29,6 @@ class Card {
 
   // Метод всех слушателей
   _setEventListeners() {
-    // Слушатель на открытие
-    this._element.querySelector('.card__img').addEventListener('click', () => {
-      this._handleOpenPopup();
-    });
-
-    // Слушатель на закрытие
-    popupPicClose.addEventListener('click', () => {
-      this._handleClosePopup();
-    });
-
     // Слушатель на лайк
     this._element.querySelector('.card__like').addEventListener('click', () => {
       this._addLike();

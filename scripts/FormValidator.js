@@ -124,4 +124,4 @@ class FormValidator {
   }
 }
 
-export { FormValidator };
+export { validationConfig, forms, FormValidator };
