@@ -1,8 +1,13 @@
 class Card {
-  constructor(name, link, template) {
+  constructor(name, link, settingsObject) {
     this._title = name;
     this._linkImg = link;
-    this._template = template;
+    this._template = settingsObject.template;
+    this._like = settingsObject.like;
+    this._delete = settingsObject.delete;
+    this._img = settingsObject.img;
+    this._titleCard = settingsObject.title;
+    this._handleCardClick = settingsObject.handleCard;
   }
 
   // Метод клонирования template-заготовки
@@ -17,9 +22,7 @@ class Card {
 
   // Метод проставления/удаления лайка
   _addLike() {
-    this._element
-      .querySelector('.card__like')
-      .classList.toggle('card__like_active');
+    this._elementLike.classList.toggle('card__like_active');
   }
 
   // Метод удаления карточки
@@ -30,26 +33,33 @@ class Card {
   // Метод всех слушателей
   _setEventListeners() {
     // Слушатель на лайк
-    this._element.querySelector('.card__like').addEventListener('click', () => {
+    this._elementLike.addEventListener('click', () => {
       this._addLike();
     });
 
     // Слушатель на удаление
-    this._element
-      .querySelector('.card__delete')
-      .addEventListener('click', () => {
-        this._deleteCard();
-      });
+    this._elementDelete.addEventListener('click', () => {
+      this._deleteCard();
+    });
+
+    this._elementImg.addEventListener('click', () => {
+      this._handleCardClick(this._title, this._linkImg);
+    });
   }
 
   // Метод генерации карточки
   generateCard() {
     this._element = this._getTemplate();
+    this._elementLike = this._element.querySelector(this._like);
+    this._elementDelete = this._element.querySelector(this._delete);
+    this._elementImg = this._element.querySelector(this._img);
+    this._elementTitle = this._element.querySelector(this._titleCard);
+
     this._setEventListeners();
 
-    this._element.querySelector('.card__img').src = this._linkImg;
-    this._element.querySelector('.card__img').alt = this._linkImg;
-    this._element.querySelector('.card__title').textContent = this._title;
+    this._elementImg.src = this._linkImg;
+    this._elementImg.alt = this._linkImg;
+    this._elementTitle.textContent = this._title;
 
     return this._element;
   }
