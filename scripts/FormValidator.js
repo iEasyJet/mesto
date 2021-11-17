@@ -14,14 +14,17 @@ class FormValidator {
     this._button = this._form.querySelector(
       this._validationConfig.submitButtonSelector
     );
+    this._inputs = Array.from(
+      this._form.querySelectorAll(this._validationConfig.inputSelector)
+    );
   }
 
   // Ресет ошибок инпутов
-  resetValidation(inputList) {
-    this.toggleButtonState(inputList);
+  resetValidation() {
+    this.toggleButtonState();
 
-    inputList.forEach((inputElement) => {
-      this._hideInputError(inputElement)
+    this._inputs.forEach((inputElement) => {
+      this._hideInputError(inputElement);
     });
   }
   // Метод активации ошибки ввода
@@ -42,15 +45,15 @@ class FormValidator {
     errorElement.textContent = '';
   }
 
-  _hasInvalidInput(inputList) {
-    return inputList.some((inputElement) => {
+  _hasInvalidInput() {
+    return this._inputs.some((inputElement) => {
       return !inputElement.validity.valid;
     });
   }
 
   // Метод смены активации/деактивации кнопки
-  toggleButtonState(inputList) {
-    if (this._hasInvalidInput(inputList)) {
+  toggleButtonState() {
+    if (this._hasInvalidInput()) {
       this._button.classList.add(this._validationConfig.inactiveButtonClass);
       this._button.setAttribute('disabled', 'disabled');
     } else {
@@ -72,18 +75,16 @@ class FormValidator {
   _setEventListeners = () => {
     // Находим все поля внутри формы,
     // сделаем из них массив методом Array.from
-    const inputList = Array.from(
-      this._form.querySelectorAll(this._validationConfig.inputSelector)
-    );
-    this.toggleButtonState(inputList);
+
+    this.toggleButtonState();
     // Обойдём все элементы полученной коллекции
-    inputList.forEach((inputElement) => {
+    this._inputs.forEach((inputElement) => {
       // каждому полю добавим обработчик события input
       inputElement.addEventListener('input', () => {
         // Внутри колбэка вызовем isValid,
         // передав ей форму и проверяемый элемент
         this._checkInputValidity(inputElement);
-        this.toggleButtonState(inputList);
+        this.toggleButtonState();
       });
     });
   };

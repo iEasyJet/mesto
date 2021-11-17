@@ -15,20 +15,14 @@ const newCardBtn = profile.querySelector('.profile__btn');
 
 // Находим popup
 const popupEditProfile = document.querySelector('.popup_type_profile');
-// Находим кнопку закрытия popup
-const popupSkipBtn = popupEditProfile.querySelector('.popup__close');
 // Находим форму popup
 const formElementPopup = popupEditProfile.querySelector('.popup__form');
 // Находим поля формы в DOM
 const nameInput = formElementPopup.querySelector('.popup__input_type_name');
 const jobInput = formElementPopup.querySelector('.popup__input_type_job');
-// Массив инпутов формы профиля
-const popupProfileInputs = [nameInput, jobInput];
 
 // Находим popup-img
 const popupImg = document.querySelector('.popup_type_card');
-// Находим кнопку закрытия popup-img
-const popupSkipBtnImg = popupImg.querySelector('.popup__close');
 // Находим форму в DOM popup-img
 const formElementImg = popupImg.querySelector('.popup__form');
 // Находим поля формы в DOM popup-img
@@ -38,13 +32,9 @@ const nameImgInput = formElementImg.querySelector(
 const linkImgInput = formElementImg.querySelector(
   '.popup__input_type_link-img'
 );
-// Массив инпутов формы создания карточки
-const imgInputs = [nameImgInput, linkImgInput];
 
 // Находим popup-pic
 const popupPic = document.querySelector('.popup_type_pic');
-// Находим закрытие popup-pic
-const popupPicClose = popupPic.querySelector('.popup__close');
 // Находим popup-pic__title
 const popupPicTitle = popupPic.querySelector('.popup__pic-title');
 // Находим popup-pic__expand
@@ -52,6 +42,9 @@ const popupPicExpand = popupPic.querySelector('.popup__pic-expand');
 
 // Место добавления карточек
 const cardsContainer = document.querySelector('.card');
+
+// Все попапы
+const allPopups = document.querySelectorAll('.popup');
 
 // Функция закрытия попапов по клавише ESC
 function handleESC(evt) {
@@ -67,14 +60,14 @@ function closeOnOverlay(e) {
   }
 }
 
-// Добавляем новый класс для отображения/закрытия popup
+// Функция открытия popup
 function openPopup(popup) {
   popup.classList.add('popup_opened');
   document.addEventListener('keydown', handleESC);
   popup.addEventListener('click', closeOnOverlay);
 }
 
-// Удаляем новый класс  для скрытия popup
+// Функция закрытия popup
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
   document.removeEventListener('keydown', handleESC);
@@ -92,8 +85,7 @@ function openPopupEditProfile() {
 
 formElementPopup.addEventListener('submit', handleNewUserName);
 
-// Обработчик «отправки» формы, хотя пока
-// она никуда отправляться не будет
+// Обработчик «отправки» формы
 function handleNewUserName(evt) {
   evt.preventDefault();
 
@@ -103,6 +95,7 @@ function handleNewUserName(evt) {
   closePopup(popupEditProfile);
 }
 
+// Функция открытия большой картинки карточки
 const handleCardClick = (name, link) => {
   openPopup(popupPic);
   popupPicTitle.textContent = name;
@@ -148,39 +141,40 @@ formElementImg.addEventListener('submit', () => {
   linkImgInput.value = '';
 });
 
-// Включаем валидацию на первую форму
-const firstFormValidation = new FormValidator(
+// Включаем валидацию на форму редактирования профиля
+const profileEditFormValidation = new FormValidator(
   validationConfig,
   formElementPopup
 );
-firstFormValidation.enableValidation();
+profileEditFormValidation.enableValidation();
 
-// Включаем валидацию на вторую форму
-const secondFormValidation = new FormValidator(
+// Включаем валидацию на форму добавления новых карточек
+const newCardFormValidation = new FormValidator(
   validationConfig,
   formElementImg
 );
-secondFormValidation.enableValidation();
+newCardFormValidation.enableValidation();
 
-// Слушатель на закрытие большой картинки по крестику
-popupPicClose.addEventListener('click', () => {
-  closePopup(popupPic);
-});
-
-// Открытие/Закрытие профиля
+// Открытие формы профиля
 editBtn.addEventListener('click', () => {
   openPopupEditProfile();
-  firstFormValidation.resetValidation(popupProfileInputs);
-});
-popupSkipBtn.addEventListener('click', () => {
-  closePopup(popupEditProfile);
+  profileEditFormValidation.resetValidation();
 });
 
-// Открытие/Закрытие формы новой карточки
+// Открытие формы новой карточки
 newCardBtn.addEventListener('click', () => {
   openPopup(popupImg);
-  secondFormValidation.resetValidation(imgInputs);
+  newCardFormValidation.resetValidation();
 });
-popupSkipBtnImg.addEventListener('click', () => {
-  closePopup(popupImg);
+
+// Проставляем всем попапам слушателей на закрытие
+allPopups.forEach((popup) => {
+  popup.addEventListener('click', (evt) => {
+    if (evt.target.classList.contains('popup_opened')) {
+      closePopup(popup);
+    }
+    if (evt.target.classList.contains('popup__close')) {
+      closePopup(popup);
+    }
+  });
 });
