@@ -1,6 +1,3 @@
-import { PopupWithImage } from './PopupWithImage.js'
-import { popupPic } from '../utils/constants.js'
-
 class Card {
   constructor(name, link, settingsObject) {
     this._title = name;
@@ -10,6 +7,7 @@ class Card {
     this._delete = settingsObject.delete;
     this._img = settingsObject.img;
     this._titleCard = settingsObject.title;
+    this._handleCardClick = settingsObject.function;
   }
 
   // Метод клонирования template-заготовки
@@ -46,8 +44,7 @@ class Card {
 
     // Слушатель на открытие большой картинки
     this._elementImg.addEventListener('click', () => {
-      const popupWithImage = new PopupWithImage(popupPic);
-      popupWithImage.open(this._title, this._linkImg)
+      this._handleCardClick(this._title, this._linkImg);
     });
   }
 

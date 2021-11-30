@@ -1,11 +1,4 @@
-// Объект настроеек
-const validationConfig = {
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__btn',
-  inactiveButtonClass: 'popup__btn_disabled',
-  inputErrorClass: 'popup__input_error_active',
-  errorClass: 'popup__input-error_active',
-};
+import { validationConfig } from '../utils/constants.js';
 
 class FormValidator {
   constructor(validationConfig, form) {

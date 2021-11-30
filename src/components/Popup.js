@@ -7,11 +7,15 @@ export class Popup {
   // Метод открытия попапа
   open() {
     this._selectorPopup.classList.add('popup_opened');
+    document.addEventListener('keydown', this._handleEscClose);
+    this._selectorPopup.addEventListener('click', this._closeOnOverlay);
   }
 
   // Метод закрытия попапа
   close() {
     this._selectorPopup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', this._handleEscClose);
+    this._selectorPopup.removeEventListener('click', this._closeOnOverlay);
   }
 
   // Метод закрытия попапа по ESC
@@ -33,7 +37,5 @@ export class Popup {
     this._closePopup.addEventListener('click', () => {
       this.close();
     });
-    document.addEventListener('keydown', this._handleEscClose);
-    this._selectorPopup.addEventListener('click', this._closeOnOverlay);
   }
 }
