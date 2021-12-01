@@ -1,7 +1,6 @@
 import './index.css';
-import { validationConfig, FormValidator } from '../components/FormValidator.js';
+import { FormValidator } from '../components/FormValidator.js';
 import { initialCards } from '../utils/initial-сards.js';
-import { Section } from '../components/Section.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo } from '../components/UserInfo.js';
 import {
@@ -11,29 +10,28 @@ import {
   formElementPopup,
   popupImg,
   formElementImg,
-  cardListSelector,
   profileSettings,
-  createCard,
+  validationConfig,
+  newSection,
+  newProfileValue,
 } from '../utils/constants.js';
-import { PopupWithImage } from '../components/PopupWithImage';
 
 // Данные профиля
-const profilePopup = new PopupWithImage(popupEditProfile);
 const userInfo = new UserInfo(profileSettings);
-
-// Слушатели на закрытие
-profilePopup.setEventListeners();
-
-// Сабмит формы профиля
-formElementPopup.addEventListener('submit', () => {
-  userInfo.setUserInfo();
-  profilePopup.close();
+const profilePopup = new PopupWithForm(popupEditProfile, {
+  callBack: (formValues) => {
+    userInfo.setUserInfo(formValues);
+    profilePopup.close();
+  },
 });
+
+// Слушатели на закрытие и сабмит формы профиля
+profilePopup.setEventListeners();
 
 // Слушатель на открытие профиля
 editBtn.addEventListener('click', () => {
-  profilePopup.open('', '');
-  userInfo.getUserInfo();
+  profilePopup.open();
+  newProfileValue(userInfo.getUserInfo());
   profileEditFormValidation.resetValidation();
 });
 
@@ -52,34 +50,12 @@ const newCardFormValidation = new FormValidator(
 newCardFormValidation.enableValidation();
 
 // Добавляем массив карточек на страницу
-const cardList = new Section(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      createCard(item.name, item.link, cardList);
-    },
-  },
-  cardListSelector
-);
-
-cardList.renderItems();
+newSection(initialCards);
 
 // Добавление новых карточек
 const shapeOfNewCards = new PopupWithForm(popupImg, {
-  callBack: () => {
-    const obj = shapeOfNewCards.getInputValues();
-    const nameImg = obj.nameImg;
-    const linkImg = obj.linkImg;
-    const cardList = new Section(
-      {
-        items: obj,
-        renderer: () => {
-          createCard(nameImg, linkImg, cardList);
-        },
-      },
-      cardListSelector
-    );
-    cardList.renderItem();
+  callBack: (formValues) => {
+    newSection(formValues);
   },
 });
 

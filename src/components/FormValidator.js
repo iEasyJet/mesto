@@ -1,5 +1,3 @@
-import { validationConfig } from '../utils/constants.js';
-
 class FormValidator {
   constructor(validationConfig, form) {
     this._validationConfig = validationConfig;
@@ -91,4 +89,4 @@ class FormValidator {
   }
 }
 
-export { validationConfig, FormValidator };
+export { FormValidator };

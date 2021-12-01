@@ -1,5 +1,6 @@
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { Card } from '../components/Card.js';
+import { Section } from '../components/Section.js';
 // Находим секцию profile
 export const profile = document.querySelector('.profile');
 // Находим кнопку редактирования
@@ -11,12 +12,17 @@ export const newCardBtn = profile.querySelector('.profile__btn');
 export const popupEditProfile = document.querySelector('.popup_type_profile');
 // Находим форму popup
 export const formElementPopup = popupEditProfile.querySelector('.popup__form');
+export const nameInput = formElementPopup.querySelector(
+  '.popup__input_type_name'
+);
+export const jobInput = formElementPopup.querySelector(
+  '.popup__input_type_job'
+);
 
 // Находим popup-img
 export const popupImg = document.querySelector('.popup_type_card');
 // Находим форму в DOM popup-img
 export const formElementImg = popupImg.querySelector('.popup__form');
-
 // Находим popup-pic
 export const popupPic = document.querySelector('.popup_type_pic');
 
@@ -25,9 +31,6 @@ export const cardListSelector = '.card';
 
 // Объект настроек для профиля
 export const profileSettings = {
-  profile: '.popup_type_profile',
-  nameInput: '.popup__input_type_name',
-  jobInput: '.popup__input_type_job',
   nameProfile: '.profile__name-user',
   jobProfile: '.profile__name-job',
 };
@@ -52,17 +55,36 @@ export const validationConfig = {
 };
 
 const popupWithImage = new PopupWithImage(popupPic);
-
-// Функция
+// Функция открытия большой функции
 function handleCardClick(name, src) {
   popupWithImage.open(name, src);
   popupWithImage.setEventListeners();
 }
 
 // Функция генерации новой карточки
-export const createCard = (name, link, cardList) => {
-  const card = new Card(name, link, settingsObject);
+export const createCard = (data, cardList) => {
+  const card = new Card(data.name, data.link, settingsObject);
 
   const cardElement = card.generateCard();
   cardList.addItem(cardElement);
+};
+
+/// Новая секция
+export const newSection = (data) => {
+  const cardList = new Section(
+    {
+      items: data,
+      renderer: (data) => {
+        createCard(data, cardList);
+      },
+    },
+    cardListSelector
+  );
+  cardList.renderItems();
+};
+
+// Новые значения профиля
+export const newProfileValue = (data) => {
+  nameInput.value = data.name;
+  jobInput.value = data.job;
 };
