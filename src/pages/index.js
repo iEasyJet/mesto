@@ -14,13 +14,23 @@ import {
   validationConfig,
   newSection,
   newProfileValue,
+  popupPic
 } from '../utils/constants.js';
+import { PopupWithImage } from '../components/PopupWithImage.js';
+
+// Функция открытия большой картинки
+const popupWithImage = new PopupWithImage(popupPic);
+export function handleCardClick(name, src) {
+  popupWithImage.open(name, src);
+  popupWithImage.setEventListeners();
+}
 
 // Данные профиля
 const userInfo = new UserInfo(profileSettings);
 const profilePopup = new PopupWithForm(popupEditProfile, {
-  callBack: (formValues) => {
-    userInfo.setUserInfo(formValues);
+  submitEvent: (formValues) => {
+    const {name: userName, job: userJob} = formValues;
+    userInfo.setUserInfo(userName, userJob);
     profilePopup.close();
   },
 });
@@ -54,8 +64,10 @@ newSection(initialCards);
 
 // Добавление новых карточек
 const shapeOfNewCards = new PopupWithForm(popupImg, {
-  callBack: (formValues) => {
-    newSection(formValues);
+  submitEvent: (formValues) => {
+    // Вкладываем объект formValues в массив newCard
+    const newCard = [{name: formValues.nameImg, link: formValues.linkImg}]
+    newSection(newCard);
   },
 });
 

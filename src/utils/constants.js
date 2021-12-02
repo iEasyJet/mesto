@@ -1,6 +1,7 @@
-import { PopupWithImage } from '../components/PopupWithImage.js';
 import { Card } from '../components/Card.js';
 import { Section } from '../components/Section.js';
+import { handleCardClick } from '../pages/index.js'
+
 // Находим секцию profile
 export const profile = document.querySelector('.profile');
 // Находим кнопку редактирования
@@ -53,13 +54,6 @@ export const validationConfig = {
   inputErrorClass: 'popup__input_error_active',
   errorClass: 'popup__input-error_active',
 };
-
-const popupWithImage = new PopupWithImage(popupPic);
-// Функция открытия большой функции
-function handleCardClick(name, src) {
-  popupWithImage.open(name, src);
-  popupWithImage.setEventListeners();
-}
 
 // Функция генерации новой карточки
 export const createCard = (data, cardList) => {
