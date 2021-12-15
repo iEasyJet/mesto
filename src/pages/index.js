@@ -149,8 +149,13 @@ const shapeOfNewCards = new PopupWithForm(popupImg, {
             likes: res.likes,
           },
         ];
-        newSection(newCard);
-        shapeOfNewCards.close();
+        api
+          .getUserUnfo()
+          .then((id) => {
+            newSection(newCard, id._id);
+            shapeOfNewCards.close();
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err))
       .finally(() => {
