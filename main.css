@@ -16,7 +16,7 @@
 .profile__img-box{height:120px;margin:0 auto 26px;position:relative;width:120px}
 .cards{margin:35px 0 0}@media (max-width:680px){.cards{margin:36px 0 0}}
 .card{-moz-column-gap:17px;column-gap:17px;display:flex;flex-wrap:wrap;justify-content:center;list-style:none;margin:0;padding:0;row-gap:20px}
-.card__img{background:#c4c4c4;border-radius:10px 10px 0 0;display:block;height:282px;width:282px}.card__img:hover{cursor:pointer}
+.card__img{background:#c4c4c4;border-radius:10px 10px 0 0;display:block;height:282px;overflow:hidden;width:282px}.card__img:hover{cursor:pointer}
 .card__item{background:#fff;border-radius:10px;display:flex;flex-direction:column;min-height:361px;position:relative;width:282px}
 .card__like{background:url(87ed371465c7a6a1cd01.svg) 0 0 no-repeat;border:0;display:flex;flex-direction:column;height:35px;justify-content:flex-end;margin:0;padding:0;transition:all .2s linear;width:22px}.card__like:hover{cursor:pointer;opacity:.5}.card__like:active{background:url(fe17a515669479b1e649.svg) 0 0 no-repeat}
 .card__name{display:flex;justify-content:space-between;margin:24px auto 0;width:241px}
