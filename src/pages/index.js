@@ -22,7 +22,6 @@ import {
 } from '../utils/constants.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupDeleteCard } from '../components/PopupDeleteCard.js';
-import { PopupUpdateAvatar } from '../components/PopupUpdateAvatar.js';
 import { Api } from '../components/Api.js';
 
 // Иницилизация апи
@@ -31,46 +30,8 @@ export const api = new Api(configdApi);
 // Проставление информации о пользователе
 api.getUserUnfo().then((res) => {
   userInfo.setUserInfo(res);
-  popupUpdateAvatar.setUserAvatar(res.avatar);
+  userInfo.setUserAvatar(res);
 });
-
-// Иницилизация класса смены аватара
-const popupUpdateAvatar = new PopupUpdateAvatar(popupChangeAvatar, {
-  submitEvent: () => {
-    popupChangeAvatar.addEventListener('submit', () => {
-      updateAvatarValidation.changeButtonName('Сохранение...');
-      api
-        .changeUserAvatar(popupAvatarLink.value)
-        .then((res) => {
-          popupUpdateAvatar.setUserAvatar(res.avatar);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          updateAvatarValidation.changeButtonName('Сохранить');
-        });
-      formChangeAvatar.reset();
-      popupUpdateAvatar.close();
-      updateAvatarValidation.resetValidation();
-    });
-  },
-});
-
-// Слушатель на открытие попапа аватара
-popupUpdateAvatar.openPopup({
-  validation: () => {
-    updateAvatarValidation.resetValidation();
-  },
-});
-
-// Удаление карточки
-const popupDeleteCard = new PopupDeleteCard(popupDeleteConfirmation);
-export function handleDeleteCard(deleteCard, aaa) {
-  popupDeleteCard.open();
-  popupDeleteCard.setEventListeners();
-  api.deleteCard(deleteCard).then(() => {
-    popupDeleteCard.deleteCard(aaa);
-  });
-}
 
 // Функция открытия большой картинки
 const popupWithImage = new PopupWithImage(popupPic);
@@ -80,7 +41,34 @@ export function handleCardClick(name, src) {
 }
 
 // Данные профиля
-const userInfo = new UserInfo(profileSettings);
+const userInfo = new UserInfo(profileSettings, {
+  submitEvent: () => {
+    popupChangeAvatar.addEventListener('submit', () => {
+      updateAvatarValidation.changeButtonName('Сохранение...');
+      api
+        .changeUserAvatar(popupAvatarLink.value)
+        .then((res) => {
+          userInfo.setUserAvatar(res);
+          userInfo.close();
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          updateAvatarValidation.changeButtonName('Сохранить');
+        });
+      formChangeAvatar.reset();
+      userInfo.close();
+      updateAvatarValidation.resetValidation();
+    });
+  },
+});
+
+// Слушатель на открытие попапа аватара
+userInfo.openPopup({
+  validation: () => {
+    updateAvatarValidation.resetValidation();
+  },
+});
+
 const profilePopup = new PopupWithForm(popupEditProfile, {
   submitEvent: (formValues) => {
     profileEditFormValidation.changeButtonName('Сохранение...');
@@ -89,6 +77,7 @@ const profilePopup = new PopupWithForm(popupEditProfile, {
       .changeUserInfo(userName, userJob)
       .then((res) => {
         userInfo.setUserInfo(res);
+        profilePopup.close();
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -130,9 +119,12 @@ const updateAvatarValidation = new FormValidator(
 updateAvatarValidation.enableValidation();
 
 // Добавляем массив карточек на страницу
-api.getInitalCards().then((res) => {
-  newSection(res);
-});
+api
+  .getInitalCards()
+  .then((res) => {
+    newSection(res);
+  })
+  .catch((err) => console.log(err));
 
 // Добавление новых карточек
 const shapeOfNewCards = new PopupWithForm(popupImg, {
@@ -149,10 +141,11 @@ const shapeOfNewCards = new PopupWithForm(popupImg, {
             link: res.link,
             owner: { _id: res.owner._id },
             _id: res._id,
-            likes: res.likes.length,
+            likes: res.likes,
           },
         ];
         newSection(newCard);
+        shapeOfNewCards.close();
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -169,3 +162,24 @@ newCardBtn.addEventListener('click', () => {
   shapeOfNewCards.open();
   newCardFormValidation.resetValidation();
 });
+
+const popupDeleteCard = new PopupDeleteCard(popupDeleteConfirmation);
+
+export function handleDeleteCard(id, card) {
+  popupDeleteCard.open();
+  popupDeleteCard.submit(() => {
+    deleteConfirmation(id, card);
+  });
+}
+
+function deleteConfirmation(id, card) {
+  api
+    .deleteCard(id)
+    .then(() => {
+      card._deleteCard();
+      popupDeleteCard.close();
+    })
+    .catch((err) => console.log(err));
+}
+
+popupDeleteCard.setEventListeners();

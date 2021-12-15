@@ -6,10 +6,14 @@ export class PopupDeleteCard extends Popup {
     this._deleteConfirmation = selectorPopup.querySelector('.popup__btn');
   }
 
-  deleteCard(deleteCard) {
+  submit(par) {
+    this._submit = par;
+  }
+
+  setEventListeners() {
+    super.setEventListeners();
     this._deleteConfirmation.addEventListener('click', () => {
-      deleteCard();
-      this.close();
+      this._submit();
     });
   }
 }

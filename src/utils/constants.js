@@ -1,6 +1,11 @@
 import { Card } from '../components/Card.js';
 import { Section } from '../components/Section.js';
-import { handleCardClick, handleDeleteCard, api } from '../pages/index.js';
+import {
+  handleCardClick,
+  handleDeleteCard,
+  api,
+  userId,
+} from '../pages/index.js';
 
 // Находим секцию profile
 export const profile = document.querySelector('.profile');
@@ -30,12 +35,6 @@ export const popupPic = document.querySelector('.popup_type_pic');
 // Контейнер карточек
 export const cardListSelector = '.card';
 
-// Объект настроек для профиля
-export const profileSettings = {
-  nameProfile: '.profile__name-user',
-  jobProfile: '.profile__name-job',
-};
-
 // Попап подтверждения удаления карточки
 export const popupDeleteConfirmation = document.querySelector(
   '.popup_type_delete-card'
@@ -49,11 +48,17 @@ export const formChangeAvatar = popupChangeAvatar.querySelector(
 );
 export const popupAvatarLink = popupChangeAvatar.querySelector('.popup__input');
 
+// Объект настроек для профиля
+export const profileSettings = {
+  nameProfile: '.profile__name-user',
+  jobProfile: '.profile__name-job',
+  popupChangeAvatar: popupChangeAvatar,
+};
+
 // Конфиг апи
 export const configdApi = {
   url: 'https://mesto.nomoreparties.co/v1/cohort-31',
   token: 'e34c71c9-c8d5-4539-958c-5ad6a7cda687',
-  id: '32552929d6c636d73b975107',
 };
 
 // Объект настроеек для создания карточки
@@ -65,9 +70,8 @@ export const settingsObject = {
   img: '.card__img',
   title: '.card__title',
   id: '32552929d6c636d73b975107',
-  function: handleCardClick,
-  secondFun: handleDeleteCard,
-  api: api,
+  handleCardClick: handleCardClick,
+  handleDeleteCard: handleDeleteCard,
 };
 
 // Объект настроеек для валидации

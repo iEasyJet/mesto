@@ -9,6 +9,9 @@ export class Popup {
     this._selectorPopup.classList.add('popup_opened');
     document.addEventListener('keydown', this._handleEscClose);
     this._selectorPopup.addEventListener('click', this._closeOnOverlay);
+    this._closePopup.addEventListener('click', () => {
+      this.close();
+    });
   }
 
   // Метод закрытия попапа

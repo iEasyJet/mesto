@@ -5,7 +5,8 @@ class Card {
     settingsObject,
     userId,
     cardId,
-    numLikes,
+    sumLikes,
+
     { callbackAddLike, callbackDeleteLike }
   ) {
     this._title = name;
@@ -15,16 +16,15 @@ class Card {
     this._delete = settingsObject.delete;
     this._img = settingsObject.img;
     this._titleCard = settingsObject.title;
-    this._handleCardClick = settingsObject.function;
-    this._handleDeleteCard = settingsObject.secondFun;
+    this._handleCardClick = settingsObject.handleCardClick;
     this._id = settingsObject.id;
     this._likeCounter = settingsObject.likeCounter;
     this._userId = userId;
     this._cardId = cardId;
-    this._api = settingsObject.api;
     this._callbackAddLike = callbackAddLike;
     this._callbackDeleteLike = callbackDeleteLike;
-    this._numLikes = numLikes;
+    this._sumLikes = sumLikes;
+    this._handleDeleteCard = settingsObject.handleDeleteCard;
   }
 
   // Метод клонирования template-заготовки
@@ -72,9 +72,7 @@ class Card {
 
     // Слушатель на открытие попапа на удаление
     this._elementDelete.addEventListener('click', () => {
-      this._handleDeleteCard(this._cardId, () => {
-        this._deleteCard();
-      });
+      this._handleDeleteCard(this._cardId, this);
     });
 
     // Слушатель на открытие большой картинки
@@ -96,18 +94,16 @@ class Card {
       this._element.querySelector(this._delete).remove();
     }
 
-    this._numLikes.forEach((el) => {
-      if (el._id === this._id) {
-        this.addLike();
-      }
-    });
+    if (this._sumLikes.some((user) => user._id === this._id)) {
+      this.addLike();
+    }
 
     this._setEventListeners();
 
     this._elementImg.src = this._linkImg;
     this._elementImg.alt = this._linkImg;
     this._elementTitle.textContent = this._title;
-    this._elementLikes.textContent = this._numLikes.length;
+    this._elementLikes.textContent = this._sumLikes.length;
 
     return this._element;
   }
