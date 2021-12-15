@@ -122,7 +122,7 @@ updateAvatarValidation.enableValidation();
 api
   .getInitalCards()
   .then((res) => {
-    newSection(res);
+    api.getUserUnfo().then(id => {newSection(res, id._id)})
   })
   .catch((err) => console.log(err));
 

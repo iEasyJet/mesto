@@ -69,7 +69,6 @@ export const settingsObject = {
   delete: '.card__delete',
   img: '.card__img',
   title: '.card__title',
-  id: '32552929d6c636d73b975107',
   handleCardClick: handleCardClick,
   handleDeleteCard: handleDeleteCard,
 };
@@ -84,7 +83,7 @@ export const validationConfig = {
 };
 
 // Функция генерации новой карточки
-export const createCard = (data, cardList) => {
+export const createCard = (data, cardList, id) => {
   const card = new Card(
     data.name,
     data.link,
@@ -92,6 +91,7 @@ export const createCard = (data, cardList) => {
     data.owner._id,
     data._id,
     data.likes,
+    id,
     {
       callbackAddLike: () => {
         api
@@ -119,12 +119,12 @@ export const createCard = (data, cardList) => {
 };
 
 /// Новая секция
-export const newSection = (data) => {
+export const newSection = (data, id) => {
   const cardList = new Section(
     {
       items: data,
       renderer: (data) => {
-        createCard(data, cardList);
+        createCard(data, cardList, id);
       },
     },
     cardListSelector

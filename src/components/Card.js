@@ -6,7 +6,7 @@ class Card {
     userId,
     cardId,
     sumLikes,
-
+    id,
     { callbackAddLike, callbackDeleteLike }
   ) {
     this._title = name;
@@ -17,7 +17,7 @@ class Card {
     this._img = settingsObject.img;
     this._titleCard = settingsObject.title;
     this._handleCardClick = settingsObject.handleCardClick;
-    this._id = settingsObject.id;
+    this._id = id;
     this._likeCounter = settingsObject.likeCounter;
     this._userId = userId;
     this._cardId = cardId;
