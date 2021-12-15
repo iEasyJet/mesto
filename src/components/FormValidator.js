@@ -18,6 +18,7 @@ class FormValidator {
       this._hideInputError(inputElement);
     });
   }
+
   // Метод активации ошибки ввода
   _showInputError(inputElement, errorMessage) {
     const errorElement = this._form.querySelector(`.${inputElement.id}-error`);
@@ -87,6 +88,11 @@ class FormValidator {
     });
     this._setEventListeners();
   }
+
+  changeButtonName(word) {
+    this._button.textContent = word;
+  }
+
 }
 
 export { FormValidator };

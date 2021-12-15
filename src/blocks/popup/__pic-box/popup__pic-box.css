@@ -3,5 +3,6 @@
   max-height: 75vh;
 
   position: fixed;
-  top: calc(50% - 37.5vh);
+  top: 50%;
+  transform: translate(0, -50%)
 }

@@ -27,11 +27,10 @@
       <main class="content">
         <section class="profile">
           <div class="profile__box">
-            <img
-              src="<%=require('./images/profile/avatar.png')%>"
-              alt="Аватар профиля"
-              class="profile__img"
-            />
+            <div class="profile__img-box">
+              <img src="" alt="Аватар профиля" class="profile__img" />
+              <div class="profile__pencil"></div>
+            </div>
 
             <div class="profile__info">
               <h1 class="profile__name-user">Жак-Ив Кусто</h1>
@@ -129,6 +128,38 @@
           <button class="popup__close"></button>
         </div>
       </article>
+
+      <article class="popup popup_type_delete-card">
+        <div class="popup__box popup__box_delete_card">
+          <h3 class="popup__title">Вы уверены?</h3>
+          <button class="popup__btn">Да</button>
+          <button class="popup__close"></button>
+        </div>
+      </article>
+
+      <article class="popup popup_type_new-avatar">
+        <div class="popup__box popup__box_update_avatar">
+          <h3 class="popup__title">Обновить аватар</h3>
+          <form
+            class="popup__form popup__form_update_avatar"
+            name="updateAvatar"
+            novalidate
+          >
+            <input
+              type="url"
+              placeholder="Ссылка на аватар"
+              name="avatar"
+              class="popup__input"
+              id="popup__input-url"
+              value=""
+              required
+            />
+            <span class="popup__input-error popup__input-url-error"></span>
+            <button class="popup__btn" type="submit">Сохранить</button>
+          </form>
+          <button class="popup__close"></button>
+        </div>
+      </article>
     </div>
 
     <template id="card">
@@ -138,7 +169,9 @@
 
         <div class="card__name">
           <h2 class="card__title"></h2>
-          <div class="card__like"></div>
+          <div class="card__like">
+            <div class="card__like-counter">0</div>
+          </div>
         </div>
       </li>
     </template>

@@ -1,7 +1,6 @@
 .profile__box {
   display: flex;
   column-gap: 30px;
-
   width: 486px;
 }
 

@@ -1,6 +1,6 @@
 import { Card } from '../components/Card.js';
 import { Section } from '../components/Section.js';
-import { handleCardClick } from '../pages/index.js'
+import { handleCardClick, handleDeleteCard, api } from '../pages/index.js';
 
 // Находим секцию profile
 export const profile = document.querySelector('.profile');
@@ -36,14 +36,38 @@ export const profileSettings = {
   jobProfile: '.profile__name-job',
 };
 
+// Попап подтверждения удаления карточки
+export const popupDeleteConfirmation = document.querySelector(
+  '.popup_type_delete-card'
+);
+// Попап изменения аватара
+export const popupChangeAvatar = document.querySelector(
+  '.popup_type_new-avatar'
+);
+export const formChangeAvatar = popupChangeAvatar.querySelector(
+  '.popup__form_update_avatar'
+);
+export const popupAvatarLink = popupChangeAvatar.querySelector('.popup__input');
+
+// Конфиг апи
+export const configdApi = {
+  url: 'https://mesto.nomoreparties.co/v1/cohort-31',
+  token: 'e34c71c9-c8d5-4539-958c-5ad6a7cda687',
+  id: '32552929d6c636d73b975107',
+};
+
 // Объект настроеек для создания карточки
 export const settingsObject = {
   template: '#card',
   like: '.card__like',
+  likeCounter: '.card__like-counter',
   delete: '.card__delete',
   img: '.card__img',
   title: '.card__title',
+  id: '32552929d6c636d73b975107',
   function: handleCardClick,
+  secondFun: handleDeleteCard,
+  api: api,
 };
 
 // Объект настроеек для валидации
@@ -57,7 +81,34 @@ export const validationConfig = {
 
 // Функция генерации новой карточки
 export const createCard = (data, cardList) => {
-  const card = new Card(data.name, data.link, settingsObject);
+  const card = new Card(
+    data.name,
+    data.link,
+    settingsObject,
+    data.owner._id,
+    data._id,
+    data.likes,
+    {
+      callbackAddLike: () => {
+        api
+          .addLike(data._id)
+          .then((res) => {
+            card.addLike(res.likes.length);
+            card.countLike(res.likes.length);
+          })
+          .catch((err) => console.log(err));
+      },
+      callbackDeleteLike: () => {
+        api
+          .deleteLike(data._id)
+          .then((res) => {
+            card.deleteLike(res.likes.length);
+            card.countLike(res.likes.length);
+          })
+          .catch((err) => console.log(err));
+      },
+    }
+  );
 
   const cardElement = card.generateCard();
   cardList.addItem(cardElement);

@@ -15,8 +15,8 @@ export class UserInfo {
   }
 
   // Проставляет данные в разметку
-  setUserInfo(userName, userJob) {
-    this._nameProfile.textContent = userName;
-    this._jobProfile.textContent = userJob;
+  setUserInfo(data) {
+    this._nameProfile.textContent = data.name;
+    this._jobProfile.textContent = data.about;
   }
 }
