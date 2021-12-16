@@ -21,6 +21,7 @@ import {
   settingsObject,
   nameInput,
   jobInput,
+  profilePencil,
 } from '../utils/constants.js';
 import { Card } from '../components/Card.js';
 import { Section } from '../components/Section.js';
@@ -49,30 +50,29 @@ popupDeleteCard.setEventListeners();
 
 // Иницилизация класса смены аватара
 const popupUpdateAvatar = new PopupWithForm(popupChangeAvatar, {
-  submitEvent: () => {
-    formChangeAvatar.addEventListener('submit', () => {
-      popupUpdateAvatar.changeButtonName('Сохранение...');
-      api
-        .changeUserAvatar(popupAvatarLink.value)
-        .then((res) => {
-          userInfo.setUserAvatar(res);
-          popupUpdateAvatar.close();
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          popupUpdateAvatar.changeButtonName('Сохранить');
-        });
-    });
+  submitEvent: (inputValue) => {
+    popupUpdateAvatar.changeButtonName('Сохранение...');
+    api
+      .changeUserAvatar(inputValue.avatar)
+      .then((res) => {
+        userInfo.setUserAvatar(res);
+        popupUpdateAvatar.close();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        popupUpdateAvatar.changeButtonName('Сохранить');
+      });
   },
 });
 
-popupUpdateAvatar.setEventListenersForAvatar();
+// Кнопка деактивирована после первого сабмита смены аватара
+// Слушатель сабмита смены аватара
+popupUpdateAvatar.setEventListeners();
 
 // Слушатель на открытие попапа аватара
-popupUpdateAvatar.openPopup({
-  validation: () => {
-    updateAvatarValidation.resetValidation();
-  },
+profilePencil.addEventListener('click', () => {
+  popupUpdateAvatar.open();
+  updateAvatarValidation.resetValidation();
 });
 
 // Добавление новых карточек
@@ -93,7 +93,7 @@ const shapeOfNewCards = new PopupWithForm(popupImg, {
             likes: res.likes,
           },
         ];
-        newSection(newCard, userInfo.giveUserId());
+        renderCards(newCard, userInfo.getUserId());
         shapeOfNewCards.close();
       })
       .catch((err) => console.log(err))
@@ -132,7 +132,6 @@ const profilePopup = new PopupWithForm(popupEditProfile, {
       .finally(() => {
         profilePopup.changeButtonName('Сохранить');
       });
-    profilePopup.close();
   },
 });
 
@@ -197,7 +196,7 @@ const setNewProfileValues = (data) => {
 };
 
 /// Новая секция
-const newSection = (data, id) => {
+const renderCards = (data, id) => {
   cardList.renderItems({
     items: data,
     renderer: (data) => {
@@ -252,9 +251,9 @@ Promise.all([
   .then((res) => {
     userInfo.setUserInfo(res[0]);
     userInfo.setUserAvatar(res[0]);
-    userInfo.getUserId(res[0]);
+    userInfo.setUserId(res[0]);
 
-    newSection(res[1], userInfo.giveUserId());
+    renderCards(res[1], userInfo.getUserId());
   })
   .catch((err) => {
     console.log(err);

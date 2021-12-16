@@ -2,7 +2,7 @@ export class UserInfo {
   constructor(objectSettings) {
     this._nameProfile = document.querySelector(objectSettings.nameProfile);
     this._jobProfile = document.querySelector(objectSettings.jobProfile);
-    this._avatarProfile = document.querySelector('.profile__img');
+    this._avatarProfile = document.querySelector(objectSettings.profileImg);
   }
 
   // Возвращает объект с данными пользователя
@@ -15,11 +15,11 @@ export class UserInfo {
     return this._userData;
   }
 
-  getUserId(data) {
+  setUserId(data) {
     this.userId = data._id
   }
 
-  giveUserId() {
+  getUserId() {
     return this.userId
   }
 

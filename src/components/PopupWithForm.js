@@ -1,13 +1,13 @@
 import { Popup } from './Popup.js';
 
 export class PopupWithForm extends Popup {
-  constructor(selectorPopup, { submitEvent }) {
-    super(selectorPopup);
+  constructor(popupSelector, { submitEvent }) {
+    super(popupSelector);
     this._callBack = submitEvent;
-    this._form = this._selectorPopup.querySelector('.popup__form');
+    this._form = this._popupSelector.querySelector('.popup__form');
     this._button = this._form.querySelector('.popup__btn');
     this._btnUpdateAvatar = document.querySelector('.profile__pencil');
-    this._inputList = this._selectorPopup.querySelectorAll('.popup__input');
+    this._inputList = this._popupSelector.querySelectorAll('.popup__input');
   }
 
   _getInputValues() {
@@ -30,19 +30,6 @@ export class PopupWithForm extends Popup {
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();
       this._callBack(this._getInputValues());
-    });
-  }
-
-  setEventListenersForAvatar() {
-    super.setEventListeners();
-    this._callBack();
-  }
-
-  // Открытие попапа смены аватара с валидацией
-  openPopup({ validation }) {
-    this._btnUpdateAvatar.addEventListener('click', () => {
-      this.open();
-      validation;
     });
   }
 

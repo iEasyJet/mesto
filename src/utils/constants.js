@@ -6,6 +6,8 @@ export const profile = document.querySelector('.profile');
 export const editBtn = profile.querySelector('.profile__edit-btn');
 // Находим кнопку добавления картинок для popup-img
 export const newCardBtn = profile.querySelector('.profile__btn');
+// Редактирование аватара
+export const profilePencil = profile.querySelector('.profile__pencil');
 
 // Находим popup
 export const popupEditProfile = '.popup_type_profile';
@@ -47,6 +49,7 @@ export const popupAvatarLink = formChangeAvatar.querySelector('.popup__input');
 export const profileSettings = {
   nameProfile: '.profile__name-user',
   jobProfile: '.profile__name-job',
+  profileImg: '.profile__img'
 };
 
 // Конфиг апи
