@@ -1,11 +1,4 @@
-import { Card } from '../components/Card.js';
-import { Section } from '../components/Section.js';
-import {
-  handleCardClick,
-  handleDeleteCard,
-  api,
-  userId,
-} from '../pages/index.js';
+import { handleCardClick, handleDeleteCard } from '../pages/index.js';
 
 // Находим секцию profile
 export const profile = document.querySelector('.profile');
@@ -15,9 +8,12 @@ export const editBtn = profile.querySelector('.profile__edit-btn');
 export const newCardBtn = profile.querySelector('.profile__btn');
 
 // Находим popup
-export const popupEditProfile = document.querySelector('.popup_type_profile');
+export const popupEditProfile = '.popup_type_profile';
+// Находим popup
+const popupEditProfileForm = document.querySelector('.popup_type_profile');
 // Находим форму popup
-export const formElementPopup = popupEditProfile.querySelector('.popup__form');
+export const formElementPopup =
+  popupEditProfileForm.querySelector('.popup__form');
 export const nameInput = formElementPopup.querySelector(
   '.popup__input_type_name'
 );
@@ -26,33 +22,31 @@ export const jobInput = formElementPopup.querySelector(
 );
 
 // Находим popup-img
-export const popupImg = document.querySelector('.popup_type_card');
+export const popupImg = '.popup_type_card';
+// Находим popup-img
+const popupImgForm = document.querySelector('.popup_type_card');
 // Находим форму в DOM popup-img
-export const formElementImg = popupImg.querySelector('.popup__form');
+export const formElementImg = popupImgForm.querySelector('.popup__form');
 // Находим popup-pic
-export const popupPic = document.querySelector('.popup_type_pic');
+export const popupPic = '.popup_type_pic';
 
 // Контейнер карточек
 export const cardListSelector = '.card';
 
 // Попап подтверждения удаления карточки
-export const popupDeleteConfirmation = document.querySelector(
-  '.popup_type_delete-card'
-);
+export const popupDeleteConfirmation = '.popup_type_delete-card';
+
 // Попап изменения аватара
-export const popupChangeAvatar = document.querySelector(
-  '.popup_type_new-avatar'
-);
-export const formChangeAvatar = popupChangeAvatar.querySelector(
+export const popupChangeAvatar = '.popup_type_new-avatar';
+export const formChangeAvatar = document.querySelector(
   '.popup__form_update_avatar'
 );
-export const popupAvatarLink = popupChangeAvatar.querySelector('.popup__input');
+export const popupAvatarLink = formChangeAvatar.querySelector('.popup__input');
 
 // Объект настроек для профиля
 export const profileSettings = {
   nameProfile: '.profile__name-user',
   jobProfile: '.profile__name-job',
-  popupChangeAvatar: popupChangeAvatar,
 };
 
 // Конфиг апи
@@ -80,60 +74,4 @@ export const validationConfig = {
   inactiveButtonClass: 'popup__btn_disabled',
   inputErrorClass: 'popup__input_error_active',
   errorClass: 'popup__input-error_active',
-};
-
-// Функция генерации новой карточки
-export const createCard = (data, cardList, id) => {
-  const card = new Card(
-    data.name,
-    data.link,
-    settingsObject,
-    data.owner._id,
-    data._id,
-    data.likes,
-    id,
-    {
-      callbackAddLike: () => {
-        api
-          .addLike(data._id)
-          .then((res) => {
-            card.addLike(res.likes.length);
-            card.countLike(res.likes.length);
-          })
-          .catch((err) => console.log(err));
-      },
-      callbackDeleteLike: () => {
-        api
-          .deleteLike(data._id)
-          .then((res) => {
-            card.deleteLike(res.likes.length);
-            card.countLike(res.likes.length);
-          })
-          .catch((err) => console.log(err));
-      },
-    }
-  );
-
-  const cardElement = card.generateCard();
-  cardList.addItem(cardElement);
-};
-
-/// Новая секция
-export const newSection = (data, id) => {
-  const cardList = new Section(
-    {
-      items: data,
-      renderer: (data) => {
-        createCard(data, cardList, id);
-      },
-    },
-    cardListSelector
-  );
-  cardList.renderItems();
-};
-
-// Новые значения профиля
-export const newProfileValue = (data) => {
-  nameInput.value = data.name;
-  jobInput.value = data.job;
 };

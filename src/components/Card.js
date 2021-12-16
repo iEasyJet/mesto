@@ -52,6 +52,10 @@ class Card {
     this._elementLike.classList.remove('card__like_active');
   }
 
+  EventListenersForLike() {
+
+  }
+
   // Метод удаления карточки
   _deleteCard() {
     this._element.remove();
@@ -62,10 +66,9 @@ class Card {
     // Слушатель на лайк
     this._elementLike.addEventListener('click', () => {
       if (this._elementLike.className.includes('card__like_active')) {
-        this.deleteLike();
+        // Удалил переключение сердечка, переключается из коллбэка ниже
         this._callbackDeleteLike();
       } else {
-        this.addLike();
         this._callbackAddLike();
       }
     });

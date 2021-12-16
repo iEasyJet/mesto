@@ -88,11 +88,6 @@ class FormValidator {
     });
     this._setEventListeners();
   }
-
-  changeButtonName(word) {
-    this._button.textContent = word;
-  }
-
 }
 
 export { FormValidator };
