@@ -248,12 +248,12 @@ Promise.all([
   // Получение информации карточек
   api.getInitalCards(),
 ])
-  .then((res) => {
-    userInfo.setUserInfo(res[0]);
-    userInfo.setUserAvatar(res[0]);
-    userInfo.setUserId(res[0]);
+  .then(([userData, cards]) => {
+    userInfo.setUserInfo(userData);
+    userInfo.setUserAvatar(userData);
+    userInfo.setUserId(userData);
 
-    renderCards(res[1], userInfo.getUserId());
+    renderCards(cards, userInfo.getUserId());
   })
   .catch((err) => {
     console.log(err);

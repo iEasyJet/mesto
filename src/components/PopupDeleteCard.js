@@ -1,9 +1,9 @@
 import { Popup } from './Popup.js';
 
 export class PopupDeleteCard extends Popup {
-  constructor(popupSelector) {
-    super(popupSelector);
-    this._deleteConfirmation = this._popupSelector.querySelector('.popup__btn');
+  constructor(popup) {
+    super(popup);
+    this._deleteConfirmation = this._popup.querySelector('.popup__btn');
   }
 
   setNewSubmit(submitHandler) {
